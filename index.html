@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<style>
+    body {
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        padding: 10% 10% 10% 10%;
+    }
+
+    .input,
+    .textarea {
+        border: 1px solid #ccc;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 1px 6px;
+    }
+
+    .input-wrap {
+        position: relative;
+    }
+
+    .input-wrap .input {
+        position: absolute;
+        width: 100%;
+        left: 0;
+    }
+
+    .width-machine {
+        /*   Sort of a magic number to add extra space for number spinner */
+        padding: 0 1rem;
+    }
+
+    .textarea {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        resize: both;
+        min-height: 40px;
+        line-height: 20px;
+    }
+
+    .textarea[contenteditable]:empty::before {
+        color: gray;
+    }
+
+    /* Just for demo */
+    * {
+        box-sizing: border-box;
+    }
+
+    p strong {
+        display: block;
+    }
+    
+</style>
+
+<body>
+    <h1 style="text-align: center;">Thai word cut for Unity3D</h1>
+    <form id="formElem" action="'https://untitled-drmm8yczka6g.runkit.sh/cut" method="POST">
+        <div class="container bg-light"></div>
+    
+        <h3 for="input" class=" text-center m-2">Input text</h3>
+    
+        <p><span id="input" class="textarea m-2" role="textbox" contenteditable></span></p>
+    
+        <div class="col-md-12 text-center">
+            <button id="submitButton" type="submit" class="btn btn-primary m-2">Cut</button>
+        </div>
+        </div>
+    
+    </form>
+    <h3 for="input" class=" text-center m-2">Output text</h3>
+    <p><span id="result" class="textarea m-2" role="textbox"></span></p>
+    
+    <div class="container">
+        <div class="col-md-12 text-center">
+            <button id="copybtn" class="btn btn-info m-2" style="display: none;" onclick="copyFunction()">Copy text</button>
+        </div>
+    </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+    formElem.onsubmit = async (e) => {
+        e.preventDefault();
+        var form = document.querySelector("#formElem");
+        data = {
+            input: form.querySelector("#input").textContent,
+        }
+        let response = await fetch('https://untitled-drmm8yczka6g.runkit.sh/cut',
+            {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+        let text = await response.text(); // read response body as text
+        document.querySelector("#result").innerHTML = text;
+        document.querySelector("#copybtn").style.display = "inline-block";
+
+    };
+
+    function copyFunction() {
+        /* Get the text field */
+        var copyText = document.querySelector("#result");
+
+        const el = document.createElement('textarea');
+        el.value = copyText.textContent;
+        document.body.appendChild(el);
+        el.select();
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        /* Alert the copied text */
+        alert("Copied the text to clipboard!");
+    }
+
+</script>
+
+</html>
